@@ -22,7 +22,7 @@ jobs:
         uses: pozetroninc/github-action-get-latest-release@v0.8.0
         with:
           owner: cmu-sei
-          repo: moodle-mod_foundrysync
+          repo: moodle-tool_foundrysync
           excludes: prerelease, draft
 
       - name: Auto-increment version if needed
@@ -77,14 +77,14 @@ jobs:
 
       - name: Package plugin
         run: |
-          zip -r mod_foundrysync_${{ steps.get_version.outputs.version }}.zip . -x "*.git*"
+          zip -r tool_foundrysync_${{ steps.get_version.outputs.version }}.zip . -x "*.git*"
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.get_version.outputs.version }}
-          name: mod_foundrysync_${{ steps.get_version.outputs.version }}
-          files: mod_foundrysync_${{ steps.get_version.outputs.version }}.zip
+          name: tool_foundrysync_${{ steps.get_version.outputs.version }}
+          files: tool_foundrysync_${{ steps.get_version.outputs.version }}.zip
           draft: false
           prerelease: false
         env:
