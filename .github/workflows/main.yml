@@ -22,13 +22,13 @@ jobs:
         uses: pozetroninc/github-action-get-latest-release@v0.8.0
         with:
           owner: cmu-sei
-          repo: moodle-mod_foundrysync
+          repo: moodle-tool_foundrysync
           excludes: prerelease, draft
 
       - name: Auto-increment version if needed
         run: |
           OLDRELEASE=${{ steps.get_latest.outputs.release }}
-          PREVIOUSVERSION=$(grep "plugin->version" foundrysync/version.php | sed -e "s/.*= \(.*\);.*/\1/")
+          PREVIOUSVERSION=$(grep "plugin->version" version.php | sed -e "s/.*= \(.*\);.*/\1/")
           if [ $OLDRELEASE -ne $PREVIOUSVERSION ]; then
               echo "Version already updated in PR"
               exit 0
@@ -43,7 +43,7 @@ jobs:
               let NEWVERS=(OLDVERS + 1)
               NEWVERSION=$OLDDATE$(printf %02d $NEWVERS)
           fi
-          sed -i "s#\(plugin->version.*\)$PREVIOUSVERSION#\1$NEWVERSION#" foundrysync/version.php
+          sed -i "s#\(plugin->version.*\)$PREVIOUSVERSION#\1$NEWVERSION#" version.php
           echo "FILESCHANGED=TRUE" >> $GITHUB_ENV
           echo "Version bumped to $NEWVERSION"
 
@@ -52,7 +52,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add foundrysync/version.php
+          git add version.php
           git commit -m "Auto-increment version"
 
       - name: Push version bump to PR
@@ -71,7 +71,7 @@ jobs:
       - name: Get version from version.php
         id: get_version
         run: |
-          VERSION=$(grep "plugin->version" foundrysync/version.php | sed -e "s/.*= \(.*\);.*/\1/")
+          VERSION=$(grep "plugin->version" version.php | sed -e "s/.*= \(.*\);.*/\1/")
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Version: $VERSION"
 
