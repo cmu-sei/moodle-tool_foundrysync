@@ -77,14 +77,18 @@ jobs:
 
       - name: Package plugin
         run: |
-          zip -r mod_foundrysync_${{ steps.get_version.outputs.version }}.zip foundrysync/ -x "*.git*"
+          mkdir -p /tmp/package
+          rsync -av --exclude='.git*' --exclude='vendor/' --exclude='node_modules/' ./ /tmp/package/foundrysync/
+          cd /tmp/package
+          zip -r tool_foundrysync_${{ steps.get_version.outputs.version }}.zip foundrysync/
+          mv tool_foundrysync_${{ steps.get_version.outputs.version }}.zip $GITHUB_WORKSPACE/
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.get_version.outputs.version }}
-          name: mod_foundrysync_${{ steps.get_version.outputs.version }}
-          files: mod_foundrysync_${{ steps.get_version.outputs.version }}.zip
+          name: tool_foundrysync_${{ steps.get_version.outputs.version }}
+          files: tool_foundrysync_${{ steps.get_version.outputs.version }}.zip
           draft: false
           prerelease: false
         env:
